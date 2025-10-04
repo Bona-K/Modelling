@@ -5,3 +5,5 @@ matplotlib
 tqdm
 jupyter
 ipykernel
+seaborn
+pillow
