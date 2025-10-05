@@ -3,6 +3,7 @@ import pandas as pd
 import networkx as nx
 from dataclasses import dataclass
 from utils.io import ensure_dir
+from utils.plotting import animate_movement
 
 @dataclass
 class Params:
@@ -43,10 +44,12 @@ def simulate(params: Params):
     customers = np.full(params.n_agents, A0, dtype=int)
     prev_pos   = np.full(params.n_agents, A0, dtype=int)   #store previous position to limit ping-pong moves
     footfall = np.zeros(params.n_nodes, dtype=int)
+    traces = []     #record all agent positions each tick
 
     if params.count_t0:
         for c in customers:
-            footfall[c] += 1       
+            footfall[c] += 1
+        traces.append(customers.copy())   #record initial positions       
 
     for _ in range(params.steps):
         for i in range(params.n_agents):
@@ -83,6 +86,8 @@ def simulate(params: Params):
             customers[i] = nxt
             footfall[nxt] += 1
 
+        traces.append(customers.copy())
+
     df = pd.DataFrame({
         "node": np.arange(params.n_nodes),
         "role": [G.nodes[n]["role"] for n in G.nodes],
@@ -93,6 +98,19 @@ def simulate(params: Params):
     ensure_dir("data/outputs")
     df.to_csv("data/outputs/step2.csv", index=False)
     print("[Saved] data/outputs/step2.csv")
-    return df
+    
+    class SimResult:
+        pass
+    sim = SimResult()
+    sim.mall_graph = G
+    sim.traces = traces
+    sim.p = params
 
-print(simulate(Params()))
+    return df, sim, A0
+
+if __name__ == "__main__":
+    df, sim, A0 = simulate(Params())
+    print("Anchor fixed at node:", A0)
+    print(df.sort_values("footfall", ascending=False).head())
+    ensure_dir("figs")
+    animate_movement(sim, filename="figs/step2_asm.gif")

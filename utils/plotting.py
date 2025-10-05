@@ -23,7 +23,7 @@ def three_frame(dfs, steps_list, title="Footfall comparison", figsize=(14,4)):
     plt.tight_layout()
     plt.show()
 
-def animate_movement(sim, filename="data/outputs/mall_walk.gif", pos=None, interval=400):
+def animate_movement(sim, filename="mall_walk.gif", pos=None, interval=400):
     """
     Animate agent movement through the shopping mall network.
 
@@ -35,7 +35,7 @@ def animate_movement(sim, filename="data/outputs/mall_walk.gif", pos=None, inter
             - traces : list of arrays/lists (each tick's agent positions)
             - p.seed : int (for reproducible layout)
     filename : str
-        Path to save GIF animation.
+        Path to save GIF animation (you can give any custom path, e.g. "figs/mytest.gif").
     pos : dict, optional
         Node positions (if None, spring_layout is generated)
     interval : int
@@ -53,13 +53,15 @@ def animate_movement(sim, filename="data/outputs/mall_walk.gif", pos=None, inter
     import networkx as nx
     import numpy as np
     from matplotlib.animation import FuncAnimation, PillowWriter
-    import os
 
     G = sim.mall_graph
     traces = sim.traces
+    if not traces:
+        raise ValueError("sim.traces is empty — did you record positions during simulation?")
 
+    # layout (spread out more clearly)
     if pos is None:
-        pos = nx.spring_layout(G, seed=sim.p.seed, k=1.0/np.sqrt(G.number_of_nodes()))
+        pos = nx.spring_layout(G, seed=sim.p.seed, k=0.8)
 
     color_map = {
         "anchor": "tab:red",
@@ -79,21 +81,22 @@ def animate_movement(sim, filename="data/outputs/mall_walk.gif", pos=None, inter
     fig, ax = plt.subplots(figsize=(7, 6))
     ax.axis("off")
 
-    nx.draw_networkx_edges(G, pos, ax=ax, alpha=0.3)
-    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=180, ax=ax)
+    nx.draw_networkx_edges(G, pos, ax=ax, alpha=0.3, width=1.0)
+    nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=200, ax=ax)
 
     # legend
     handles = [
         plt.Line2D([0],[0], marker="o", ls='', color=color_map["anchor"], label="anchor"),
         plt.Line2D([0],[0], marker="o", ls='', color=color_map["similar"], label="similar"),
-        plt.Line2D([0],[0], marker="o", ls='', color=color_map["different"], label="different")
+        plt.Line2D([0],[0], marker="o", ls='', color=color_map["different"], label="different"),
+        plt.Line2D([0],[0], marker="o", ls='', color="black", label="agents")
     ]
     ax.legend(handles=handles, loc="upper left", frameon=True)
 
     first = traces[0]
     xs = [pos[int(n)][0] for n in first]
     ys = [pos[int(n)][1] for n in first]
-    scat = ax.scatter(xs, ys, s=18, alpha=0.7, color="black")
+    scat = ax.scatter(xs, ys, s=40, c="black", alpha=0.8)
     ax.set_title("Agent movement (tick=0)")
 
     def update(frame):
@@ -105,9 +108,7 @@ def animate_movement(sim, filename="data/outputs/mall_walk.gif", pos=None, inter
         return scat,
 
     anim = FuncAnimation(fig, update, frames=len(traces), interval=interval, blit=True)
-
-    writer = PillowWriter(fps=max(1, int(1000/interval)))
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    writer = PillowWriter(fps=max(1, int(1000 / interval)))
     anim.save(filename, writer=writer)
     plt.close(fig)
     print(f"[Saved GIF] {filename}")
