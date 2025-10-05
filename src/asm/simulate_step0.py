@@ -49,7 +49,7 @@ def simulate(params):
     df = pd.DataFrame({
         "node": np.arange(params.n_nodes),
         "role": [G.nodes[n]["role"] for n in G.nodes],
-        "type": [G.nodes[n]["category"] for n in G.nodes],
+        "category": [G.nodes[n]["category"] for n in G.nodes],
         "footfall": footfall
     })
     ensure_dir("data/outputs")
