@@ -11,7 +11,8 @@ class Params:
     p_edge = 0.2     
     n_agents = 100      
     steps = 10
-    seed = 1        
+    seed = 1
+    count_t0: bool = True    # whether to count t=0 anchor placements in footfall
 
 def build_graph(params):
     G = nx.erdos_renyi_graph(params.n_nodes, params.p_edge, seed=params.seed)
@@ -33,8 +34,9 @@ def simulate(params):
     positions = np.full(params.n_agents, A0, dtype = int)
     footfall = np.zeros(params.n_nodes, dtype=int)
 
-    for c in positions:
-        footfall[c] += 1
+    if params.count_t0:
+        for c in positions:
+            footfall[c] += 1
 
     for _ in range(params.steps):
         for i in range(params.n_agents):
@@ -54,8 +56,9 @@ def simulate(params):
     })
     ensure_dir("data/outputs")
     df.to_csv("data/outputs/step0.csv", index= False)
-    return df
+    return df, A0
 
 if __name__ == "__main__":
-    df = simulate(Params())
+    df, A0 = simulate(Params())
     print(df.head())
+    print("A0:", A0)
