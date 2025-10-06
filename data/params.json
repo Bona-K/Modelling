@@ -1,0 +1,43 @@
+{
+  "tick_minutes": 15,
+  "agents": 500,
+  "ticks": 8,
+
+  "theta_same": 0.6,
+  "p_move_below": 0.4,
+  "p_stay_anchor": 0.3,
+  "anti_backtrack": true,
+
+  "dwell_ticks": { "min": 4, "max": 8 },
+
+  "categories": ["ANCHOR","FNB","FASHION","SERVICE","GROCERY","LIFESTYLE"],
+
+  "purchase_prob": {
+    "ANCHOR": 0.20,
+    "FNB": 0.35,
+    "FASHION": 0.18,
+    "SERVICE": 0.12,
+    "GROCERY": 0.22,
+    "LIFESTYLE": 0.16
+  },
+
+  "base_attract": {
+    "ANCHOR": 0.60,
+    "FNB": 0.55,
+    "FASHION": 0.45,
+    "SERVICE": 0.35,
+    "GROCERY": 0.50,
+    "LIFESTYLE": 0.40
+  },
+
+  "quality_weight": 0.2,
+
+  "complements": {
+    "ANCHOR": ["FNB","FASHION","GROCERY","LIFESTYLE","SERVICE"],
+    "FNB": ["ANCHOR","LIFESTYLE"],
+    "FASHION": ["ANCHOR","LIFESTYLE"],
+    "SERVICE": ["ANCHOR","FNB","GROCERY"],
+    "GROCERY": ["ANCHOR","FNB"],
+    "LIFESTYLE": ["ANCHOR","FNB","FASHION"]
+  }
+}
