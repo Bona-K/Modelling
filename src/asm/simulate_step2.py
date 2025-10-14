@@ -71,14 +71,14 @@ def simulate(params: Params):
             same_neighbors = [v for v in neighbors if G.nodes[v]["category"] == curr_cat]
             ratio_same = len(same_neighbors) / len(neighbors)
 
-            # 규칙 1: anchor 체류
+            
             if G.nodes[here]["role"] == "anchor" and rng.random() < params.p_stay_anchor:
                 nxt = here
-            # 규칙 2: 임계치 충족 → 같은 category로 이동
+            
             elif same_neighbors and ratio_same >= params.theta_same:
                 nxt = int(rng.choice(same_neighbors))
             else:
-                # 규칙 3: complement 우선 이동 시도
+               
                 comp_neighbors = [v for v in neighbors if is_complement(curr_cat, G.nodes[v]["category"])]
                 if rng.random() < params.p_move_below:
                     pool = comp_neighbors if comp_neighbors else neighbors
@@ -86,7 +86,7 @@ def simulate(params: Params):
                 else:
                     nxt = here
 
-            # 규칙 4: 바로 이전 위치로 튕기기 방지
+            
             if params.anti_backtrack and nxt == prev_pos[i] and rng.random() < params.backtrack_penalty:
                 nxt = here
 
@@ -124,7 +124,6 @@ def animate_movement(sim, filename="figs/step2_asm.gif", pos=None, interval=400)
     if not traces: raise ValueError("sim.traces is empty")
     if pos is None: pos = nx.spring_layout(G, seed=sim.p.seed, k=0.8)
 
-    # node colors
     cmap = {"anchor":"tab:red","similar":"tab:blue","different":"tab:green"}
     node_colors = [
         (cmap["anchor"] if G.nodes[n].get("role")=="anchor"
