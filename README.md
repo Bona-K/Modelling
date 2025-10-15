@@ -24,7 +24,9 @@ Run these notebooks in order:
 5. notebooks/step4_crowd_dynamics.ipynb (Boids + affinity + diagnostics)
 Outputs: CSV under data/outputs/, figures under data/outputs/figs/ (or fig/).
 
-##Repository Structure
+## Repository Structure
+
+```text
 ├─ src/                      # Step-by-step simulation code used to run the models
 │  └─ asm/                   # Simulator modules (core logic)
 │     ├─ simulate_step0.py
