@@ -251,7 +251,7 @@ def simulate(p: Params):
 
     return df, exit_df, A0, sim, diag
 
-# Presets A/B
+# Presets A - medium anchor remains
 def preset_A() -> Params:
     return Params(
         steps=10, n_agents=100,
@@ -260,16 +260,6 @@ def preset_A() -> Params:
         w_center=0.8, w_avoid=1.2, w_align=0.6, w_love=1.0,
         k_hop=1, max_node_capacity=15,
         anchor_quality=3,
-    )
-
-def preset_B() -> Params:
-    return Params(
-        steps=10, n_agents=100,
-        p_stay_anchor=0.45,
-        comp_bias=1.1,
-        w_center=0.6, w_avoid=1.0, w_align=0.6, w_love=1.8,
-        k_hop=1, max_node_capacity=12,
-        anchor_quality=4,
     )
 
 # Quick stats
