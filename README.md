@@ -10,11 +10,32 @@ We represent the shopping mall as a network (nodes = stores, edges = adjacency) 
 
 ## Quickstart & Run
 ```bash
-git clone https://github.com/Bona-K/Modelling.git
+# 1️⃣ Clone the repository (main branch)
+git clone -b main https://github.com/Bona-K/Modelling.git
+
+# 2️⃣ Move into the repo
 cd Modelling
-python -m venv .venv && . .venv/bin/activate
+
+# 3️⃣ (Optional) Create virtual environment
+python -m venv .venv
+
+# 4️⃣ Activate the environment
+# Windows (PowerShell)
+. .\.venv\Scripts\Activate.ps1
+# macOS/Linux
+source .venv/bin/activate
+
+# 5️⃣ Install dependencies
+# Windows (PowerShell)
 pip install -r requirements.txt
-jupyter lab
+pip install notebook matplotlib networkx pandas numpy
+
+# macOS/Linux
+pip install -r requirements.txt || pip install notebook matplotlib networkx pandas numpy
+
+# 6️⃣ Launch Jupyter Notebook
+jupyter notebook notebooks/step4_Boid.ipynb
+
 ```
 Run these notebooks in order:
 1. notebooks/step0_setup.ipynb → Run All → verify total footfall & saved CSV/figs
